@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+</head>
+<body>
+<div th:insert="~{fragment :: logout}"></div>
+<h1>Пользователь</h1>
+
+<div>
+    <label>Имя: </label>
+    <span th:text="${user.getFirstName()}"></span>
+</div>
+
+<div>
+    <label>Фамилия: </label>
+    <span th:text="${user.getLastName()}"></span>
+</div>
+
+<div>
+    <label>Почта: </label>
+    <span th:text="${user.getEmail()}"></span>
+</div>
+<div><a th:href="@{/user/edit/}">Изменить</a></div>
+</body>
+</html>
