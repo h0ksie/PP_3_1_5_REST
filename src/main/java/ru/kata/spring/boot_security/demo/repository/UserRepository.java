@@ -10,9 +10,6 @@ import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findById(Long id);
-
-    void deleteById(Long id);
 
     @Query("select u from User u join fetch u.roles where u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);

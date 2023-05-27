@@ -1,61 +1,279 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
     <title>Admin page</title>
 </head>
 <body>
-<div th:insert="~{fragment :: logout}"></div>
-<table>
-    <thead>
-    <tr>
-        <th scope="col">Имя</th>
-        <th scope="col">Фамилия</th>
-        <th scope="col">Электронная почта</th>
-        <th scope="col">Роли</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.getFirstName()}"/>
-        <td th:text="${user.getLastName()}"/>
-        <td th:text="${user.getEmail()}"/>
-        <td>
-            <span th:each="role : ${user.getRoles()}" th:text="${role.getName()} "></span>
-        </td>
+<div th:insert="~{fragment :: navbar}"></div>
+<div class="container-fluid" style="margin-top: 4%; max-height: 100%; height: 100vh; background-color: #f8f9fa">
+    <div class="row">
+        <div class="p-0 col-2" style="max-height: 100%; height: 100vh; background-color: #ffffff">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-admin-tab" href="/admin" sec:authorize="hasAuthority('ADMIN')"
+                   role="tab" aria-controls="v-pills-home" aria-selected="true">Admin</a>
+                <a class="nav-link" id="v-pills-user-tab" href="/user" sec:authorize="hasAuthority('USER')"
+                   role="tab" aria-controls="v-pills-profile" aria-selected="false">User</a>
+            </div>
+        </div>
+        <div class="col m-4">
+            <h1 class="h1">Admin panel</h1>
+            <ul class="nav nav-tabs mb-3 font-weight-normal" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-users-tab" data-toggle="pill" href="#usersTab" role="tab"
+                       aria-controls="usersTab" aria-selected="true">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-new-user" data-toggle="pill" href="#newUser" role="tab"
+                       aria-controls="newUser" aria-selected="false">New User</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="usersTab" role="tabpanel" aria-labelledby="pills-users-tab">
+                    <h4 class="card-header">All users</h4>
+                    <div class="card text-left">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Фамилия</th>
+                                <th scope="col">Электронная почта</th>
+                                <th scope="col">Роли</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.getId()}"/>
+                                <td th:text="${user.getFirstName()}"/>
+                                <td th:text="${user.getLastName()}"/>
+                                <td th:text="${user.getEmail()}"/>
+                                <td>
+                                    <span class="p-1" th:each="role : ${user.getRoles()}"
+                                          th:text="${role.getName()} "></span>
+                                </td>
 
-        <td>
-            <div><a th:href="@{/admin/edit/{userId}/(userId=${user.id})}">Изменить</a></div>
-        </td>
-        <td>
-            <form th:action="@{/admin/{userId}/delete(userId=${user.id})}" method="post">
-                <button type="submit"> Удалить</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<h3> Добавить нового пользователя </h3>
-<form th:action="@{/admin/create}" method="post">
-    <label for="firstName">Имя:
-        <input id="firstName" type="text" name="firstName">
-    </label> <br>
-    <label for="lastName">Фамилия:
-        <input id="lastName" type="text" name="lastName">
-    </label> <br>
-    <label for="email">Электронная почта:
-        <input id="email" type="text" name="email">
-    </label> <br>
-    <label for="userPassword">Пароль:
-        <input id="userPassword" type="password" name="password">
-    </label> <br>
-    <div th:each="role : ${roles}">
-        <input th:id="${role}" type="checkbox" name="roles" th:value="${role.id}">
-        <label th:for="${role}" th:text="${role.name}"/>
+                                <td>
+                                    <button type="button" class="btn btn-info" data-toggle="modal" id="user-edit"
+                                            data-target="#userEdit" th:data-userId="${user.id}">
+                                        Edit
+                                    </button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" id="user-delete"
+                                            data-target="#userDelete" th:data-userId="${user.id}">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="newUser" role="tabpanel" aria-labelledby="pills-new-user">
+                    <h4 class="card-header">Add new user</h4>
+                    <div class="card text-center">
+                        <form th:action="@{/admin/create}" method="post">
+                            <label class="font-weight-bold m-2" for="firstName">Имя:
+                                <input class="form-control" placeholder="First name" id="firstName" style="height: 30px;
+                                 width: 350px; margin: 0 auto" type="text" name="firstName">
+                            </label> <br>
+                            <label class="font-weight-bold m-2" for="lastName">Фамилия:
+                                <input class="form-control" style="height: 30px; width: 350px; margin: 0 auto"
+                                       placeholder="Last name" id="lastName" type="text" name="lastName">
+                            </label> <br>
+                            <label class="font-weight-bold m-2" for="email">Электронная почта:
+                                <input class="form-control" placeholder="Email" id="email"
+                                       style="height: 30px; width: 350px; margin: 0 auto" type="text" name="email">
+                            </label> <br>
+                            <label class="font-weight-bold m-2" for="userPassword">Пароль:
+                                <input class="form-control" id="userPassword" type="password" name="password"
+                                       style="height: 30px; width: 350px; margin: 0 auto" placeholder="Password">
+                            </label> <br>
+                            <label class="font-weight-bold m-2">Role:
+                                <select class="form-control form-control-sm" name="roles" multiple="multiple"
+                                        style="height: 50px; width: 350px; margin: 0 auto">
+                                    <option th:each="role: ${roles}"
+                                            th:value="${role.getId()}"
+                                            th:text="${role.getName()}"
+                                            name="roles">
+                                    </option>
+                                </select>
+                            </label><br>
+                            <button type="submit" class="btn btn-success btn-lg m-2"> Добавить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+<div class="modal fade" id="userEdit" tabindex="-1" role="dialog" aria-labelledby="editUserLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserLabel">Edit user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <form id="userEditModal" th:action="@{admin/update}" method="post">
+                    <label for="user-id" hidden>
+                        <input class="form-control mt-3" hidden id="user-id" type="text" name="id">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-firstName">Имя:
+                        <input class="form-control" placeholder="First name" id="user-firstName"
+                               style="height: 30px; width: 350px; margin: 0 auto" type="text" name="firstName">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-lastName">Фамилия:
+                        <input class="form-control" style="height: 30px; width: 350px; margin: 0 auto"
+                               type="text" id="user-lastName" name="lastName" placeholder="Last name">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-email">Электронная почта:
+                        <input class="form-control" id="user-email" style="height: 30px; width: 350px; margin: 0 auto"
+                               type="text" name="email" placeholder="Email">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-password">Пароль:
+                        <input class="form-control" placeholder="Password" id="user-password"
+                               style="height: 30px; width: 350px; margin: 0 auto" type="password" name="password">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3">Role:
+                        <select class="form-control form-control-sm" name="roles" multiple="multiple"
+                                style="height: 50px; width: 350px; margin: 0 auto" id="user-roles">
+                            <option th:each="role: ${roles}"
+                                    th:value="${role.getId()}"
+                                    th:text="${role.getName()}"
+                                    name="roles">
+                            </option>
+                        </select>
+                    </label><br>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="userEditModal" class="btn btn-primary">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="userDelete" tabindex="-1" role="dialog" aria-labelledby="deleteUserLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserLabel">Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <form id="userDeleteModal" th:action="@{/admin/delete}" method="post">
+                    <label for="user-id-delete" hidden>
+                        <input class="form-control" hidden id="user-id-delete"
+                               type="text" name="id" readonly>
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-firstName-delete">Имя:
+                        <input class="form-control" placeholder="First name" id="user-firstName-delete"
+                               style="height: 30px; width: 350px; margin: 0 auto" type="text" name="firstName" readonly>
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-lastName-delete">Фамилия:
+                        <input class="form-control" style="height: 30px; width: 350px; margin: 0 auto"
+                               type="text" id="user-lastName-delete" name="lastName" placeholder="Last name" readonly>
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-email-delete">Электронная почта:
+                        <input class="form-control" id="user-email-delete" placeholder="Email" readonly
+                               style="height: 30px; width: 350px; margin: 0 auto" type="text" name="email">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-password-delete">Пароль:
+                        <input class="form-control" placeholder="Password" id="user-password-delete" type="password"
+                               name="password" readonly style="height: 30px; width: 350px; margin: 0 auto">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3">Role:
+                        <select class="form-control form-control-sm" name="roles" multiple="multiple"
+                                style="height: 50px; width: 350px; margin: 0 auto" id="user-roles-delete" readonly>
+                            <option th:each="role: ${roles}"
+                                    th:value="${role.getId()}"
+                                    th:text="${role.getName()}"
+                                    name="roles">
+                            </option>
+                        </select>
+                    </label><br>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="userDeleteModal" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <button type="submit"> Добавить</button>
-</form>
+<script>
+    $(document).ready(function () {
+        $('#userEdit').on('shown.bs.modal', function (event) {
+            let button = $(event.relatedTarget)
+            let userId = button.data('userid')
+            if (userId) {
+                $.get({
+                    url: '/admin/userinfo/' + userId,
+                    success: (data) => {
+                        let modal = $(this)
+                        modal.find('#user-id').val(data.id)
+                        modal.find('#user-firstName').val(data.firstName)
+                        modal.find('#user-lastName').val(data.lastName)
+                        modal.find('#user-email').val(data.email)
+                        modal.find('#user-password').val(data.password)
+                        modal.find('#user-roles').val(data.roles.map(role => role.id))
+                    },
+                    error: function (err) {
+                        alert(err)
+                    }
+                })
+            }
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#userDelete').on('shown.bs.modal', function (event) {
+            let button = $(event.relatedTarget)
+            let userId = button.data('userid')
+            if (userId) {
+                $.get({
+                    url: '/admin/userinfo/' + userId,
+                    success: (data) => {
+                        let modal = $(this)
+                        modal.find('#user-id-delete').val(data.id)
+                        modal.find('#user-firstName-delete').val(data.firstName)
+                        modal.find('#user-lastName-delete').val(data.lastName)
+                        modal.find('#user-email-delete').val(data.email)
+                        modal.find('#user-password-delete').val(data.password)
+                        modal.find('#user-roles-delete').val(data.roles.map(role => role.id))
+                    },
+                    error: function (err) {
+                        alert(err)
+                    }
+                });
+            }
+        })
+    })
+</script>
 </body>
 </html>

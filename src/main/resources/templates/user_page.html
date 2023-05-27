@@ -1,27 +1,60 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <title>User</title>
 </head>
 <body>
-<div th:insert="~{fragment :: logout}"></div>
-<h1>Пользователь</h1>
-
-<div>
-    <label>Имя: </label>
-    <span th:text="${user.getFirstName()}"></span>
+<div th:insert="~{fragment :: navbar}"></div>
+<div class="container-fluid" style="margin-top: 4%; max-height: 100%; height: 100vh; background-color: #f8f9fa">
+    <div class="row">
+        <div class="p-0 col-2" style="max-height: 100%; height: 100vh; background-color: #ffffff">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a sec:authorize="hasAuthority('ADMIN')" class="nav-link" id="v-pills-admin-tab" href="/admin"
+                   role="tab" aria-controls="v-pills-home" aria-selected="false">Admin</a>
+                <a sec:authorize="hasAuthority('USER')" class="nav-link active" id="v-pills-user-tab" href="/user"
+                   role="tab" aria-controls="v-pills-profile" aria-selected="true">User</a>
+            </div>
+        </div>
+        <div class="col m-4">
+            <h1 class="h1">User information-text</h1>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="usersTab" role="tabpanel" aria-labelledby="pills-users-tab">
+                    <h4 class="card-header">About user</h4>
+                    <div class="card text-left">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">id</th>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Фамилия</th>
+                                <th scope="col">Электронная почта</th>
+                                <th scope="col">Роли</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td th:text="${user.getId()}"/>
+                                <td th:text="${user.getFirstName()}"/>
+                                <td th:text="${user.getLastName()}"/>
+                                <td th:text="${user.getEmail()}"/>
+                                <td>
+                                    <span class="p-1" th:each="role : ${user.getRoles()}"
+                                          th:text="${role.getName()} "></span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div>
-    <label>Фамилия: </label>
-    <span th:text="${user.getLastName()}"></span>
-</div>
-
-<div>
-    <label>Почта: </label>
-    <span th:text="${user.getEmail()}"></span>
-</div>
-<div><a th:href="@{/user/edit/}">Изменить</a></div>
 </body>
 </html>

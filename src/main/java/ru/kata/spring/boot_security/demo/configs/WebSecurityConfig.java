@@ -20,18 +20,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(urlConfig -> urlConfig
+                .authorizeRequests(urlConfig -> urlConfig
+                        .antMatchers("/login").permitAll()
                         .antMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
                         .antMatchers("/admin/**").hasAuthority("ADMIN")
-                        .antMatchers("/login").permitAll()
-                        .antMatchers("/logout").authenticated()
-                        .anyRequest().denyAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin().successHandler(successUserHandler)
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll();
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login")
+                )
+                .formLogin(login -> login
+                        .loginPage("/login")
+                        .successHandler(successUserHandler));
+
     }
 
     @Bean
