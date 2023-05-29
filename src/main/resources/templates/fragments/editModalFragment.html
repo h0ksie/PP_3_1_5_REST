@@ -1,0 +1,46 @@
+<div class="modal fade" id="userEdit" tabindex="-1" role="dialog" aria-labelledby="editUserLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserLabel">Edit user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <form id="userEditModal">
+                    <label for="user-id" hidden>
+                        <input class="form-control mt-3" hidden id="user-id" type="text" name="id">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-firstName">Имя:
+                        <input class="form-control" placeholder="First name" id="user-firstName"
+                               style="height: 30px; width: 350px; margin: 0 auto" type="text" name="firstName">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-lastName">Фамилия:
+                        <input class="form-control" style="height: 30px; width: 350px; margin: 0 auto"
+                               type="text" id="user-lastName" name="lastName" placeholder="Last name">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-email">Электронная почта:
+                        <input class="form-control" id="user-email"
+                               style="height: 30px; width: 350px; margin: 0 auto"
+                               type="text" name="email" placeholder="Email">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-password">Пароль:
+                        <input class="form-control" placeholder="Password" id="user-password"
+                               style="height: 30px; width: 350px; margin: 0 auto" type="password" name="password">
+                    </label> <br>
+                    <label class="font-weight-bold mt-3" for="user-roles-edit">Role:
+                        <select class="form-control form-control-sm" name="roles" multiple="multiple"
+                                style="height: 50px; width: 350px; margin: 0 auto" id="user-roles-edit">
+                        </select>
+                    </label><br>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn-edit-submit">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>

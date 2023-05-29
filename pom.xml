@@ -6,13 +6,12 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.12</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>ru.kata</groupId>
-    <artifactId>spring-boot_security-demo</artifactId>
+    <artifactId>spring-crud-rest</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-boot_security-demo</name>
-    <description>Demo project for Spring Boot</description>
+    <name>spring-crud-rest</name>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -60,6 +59,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
         </dependency>
     </dependencies>
 
